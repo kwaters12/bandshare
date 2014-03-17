@@ -7,6 +7,10 @@ describe HomepageController do
       get :index
       expect(response).to be_success
     end
+
+    it "shows all bands" do
+      
+    end
   end
 
 end

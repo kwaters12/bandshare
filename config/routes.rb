@@ -2,6 +2,7 @@ Gigsurfing::Application.routes.draw do
 
   devise_for :users
 
+  get 'tags/:tag', to: 'homepage#index', as: :genres
   resources :bands
   root "homepage#index"
   # The priority is based upon order of creation: first created -> highest priority.

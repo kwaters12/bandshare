@@ -1,1 +1,10 @@
 = link_to "Add your Band", new_band_path, class: "btn btn-default"
+#tag_cloud
+  - tag_cloud Band.tag_counts, %w[s m l] do |tag, css_class|
+    = link_to tag.name, genres_path(tag.name), class: css_class
+- @bands.each do |band|
+  %h3= band.name
+  Genres:
+  = raw band.tag_list.map { |t| link_to t, genres_path(t) }.join(', ')
+
+  %p= link_to "Edit", edit_band_path(band)

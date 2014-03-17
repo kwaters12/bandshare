@@ -1,0 +1,24 @@
+= form_for @band do |f|  
+  .col-md-6
+    = f.label :name
+    %br
+    .col-md-12
+      = f.text_field :name, class: "form-control"
+    %br
+    = f.label :tag_list, "Genres (separated by commas)"
+    %br
+    .col-md-12
+      = f.text_field :tag_list, class: "form-control"
+    %br
+    = f.label :links, "Links (Soundcloud, Youtube, etc., separated by commas)"
+    %br
+    .col-md-12
+      = f.text_field :links, class: "form-control"
+    %br
+    = f.label :address
+    %br
+    .col-md-12
+      = f.text_field :address, class: "form-control"
+    %br
+    %br
+    = f.submit value: 'Add', class: 'btn btn-default'
