@@ -23,7 +23,7 @@ gem 'rails-erd'
 gem "binding_of_caller"
 gem "omniauth-google-oauth2"
 gem 'google-api-client', :require => 'google/api_client'
-
+gem 'acts-as-taggable-on'
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.0.0.beta'

@@ -1,0 +1,11 @@
+@import 'bootstrap';
+
+.navbar {
+  border-radius: 0;
+}
+.navbar-inverse .navbar-nav  li a {
+  ::hover {
+    background-color: red;
+  }
+}
+#name {float: right; margin-top: 10px; margin-right: 50px; display: block;}
