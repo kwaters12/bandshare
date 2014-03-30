@@ -1,11 +1,15 @@
 class BandsController < ApplicationController
+  before_action :authenticate_user!, except: [:index, :show]
   before_action :find_band, except: [:index, :new, :create]
+  # before_save(:on => :create) :assign_band_owner
+  
   def new
     @band = Band.new
   end
 
   def create
-    @band = Band.new band_params
+    @band = current_user.bands.new band_params
+
 
     if @band.save 
       redirect_to root_url, notice: "Band added!"
@@ -30,12 +34,15 @@ class BandsController < ApplicationController
 
   private
 
+  # def assign_band_owner
+
+  # end
   def find_band
     @band = Band.find(params[:id])
   end
 
   def band_params
-    params.require(:band).permit([:name, :tag_list, :links, :address])
+    params.require(:band).permit([:name, :tag_list, :links, :address, {user_ids:[]}])
   end
 
 end

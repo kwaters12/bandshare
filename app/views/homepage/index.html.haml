@@ -3,8 +3,12 @@
   - tag_cloud Band.tag_counts, %w[s m l] do |tag, css_class|
     = link_to tag.name, genres_path(tag.name), class: css_class
 - @bands.each do |band|
-  %h3= band.name
+  / = image_tag band.owner.gravatar_url
+  %h3= link_to "#{band.name}", band_path(band)
   Genres:
   = raw band.tag_list.map { |t| link_to t, genres_path(t) }.join(', ')
+  %br
+  - band.users.each do |member|
+    = link_to "#{member.name_display}", profile_path(member)
 
   %p= link_to "Edit", edit_band_path(band)

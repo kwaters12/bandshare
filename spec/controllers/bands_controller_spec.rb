@@ -2,6 +2,15 @@ require 'spec_helper'
 
 describe BandsController do 
 
+  include Devise::TestHelpers
+
+  before (:each) do
+    user = create(:user)
+    sign_in user
+  end
+  
+  before { ActionMailer::Base.deliveries = [] } #  ActionMailer::Base.deliveries.clear
+
   describe "#new" do
     it "is successful" do
       get :new

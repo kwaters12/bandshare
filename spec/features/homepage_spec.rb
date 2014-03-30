@@ -8,7 +8,7 @@ feature "Homepage" do
 
   scenario "User can add a band" do
     visit "/"
-    click_on "Add your Band"
+    visit "bands/new"
     fill_in 'Name', with: 'DeathScream'
     fill_in 'Genres', with: 'rock, rap'
     fill_in 'Links', with: 'www.youcloud.com'

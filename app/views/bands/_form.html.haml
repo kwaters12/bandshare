@@ -4,6 +4,13 @@
     %br
     .col-md-12
       = f.text_field :name, class: "form-control"
+    Band Members:
+    %ul
+      = hidden_field_tag "band[user_ids][]", nil
+      - User.all.each do |user|
+        %li
+          = check_box_tag "band[user_ids][]", user.id
+          = user.name_display
     %br
     = f.label :tag_list, "Genres (separated by commas)"
     %br
