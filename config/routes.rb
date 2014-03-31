@@ -6,7 +6,11 @@ Gigsurfing::Application.routes.draw do
   get 'tags/:tag', to: 'homepage#index', as: :genres
   resources :bands
 
-  resources :user_friendships
+  resources :user_friendships do
+    member do
+      put :accept
+    end
+  end
   root "homepage#index"
 
   as :user do
