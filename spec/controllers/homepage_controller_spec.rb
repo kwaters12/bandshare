@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe HomepageController do 
+  
+  include Devise::TestHelpers
 
   describe "#index" do
     it "is successful" do
