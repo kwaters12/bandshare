@@ -1,8 +1,10 @@
 class UserFriendshipsController < ApplicationController
   before_action :authenticate_user!
+  respond_to :html, :json
 
   def index
     @user_friendships = current_user.user_friendships.all
+    respond_with @user_friendships
   end
 
   def accept
@@ -18,9 +20,7 @@ class UserFriendshipsController < ApplicationController
   def new
     if params[:friend_id]
       @friend = User.where(profile_name: params[:friend_id]).first
-      Rails.logger.info ">>>>>>>>>>>>>>>>>>>"
-      Rails.logger.info "@friend: #{@friend.inspect}"
-      Rails.logger.info ">>>>>>>>>>>>>>>>>>>"
+      raise ActiveRecord::RecordNotFound if @friend.nil?
       @user_friendship = current_user.user_friendships.new(friend: @friend)
     else
       flash[:error] = "Friend required"
@@ -30,18 +30,26 @@ class UserFriendshipsController < ApplicationController
   end
 
   def create
-
-    if params[:user_friendship] && params[:user_friendship].has_key?(:friend_id)
-     
+    if params[:user_friendship] && params[:user_friendship].has_key?(:friend_id)  
+      # @friend = User.where(profile_name: params[:user_friendship][:friend_id]) 
       @friend = User.find(params[:user_friendship][:friend_id])
       @user_friendship = UserFriendship.request(current_user, @friend)
-      # @user_friendship = current_user.user_friendships.new(friend: @friend)
-      if @user_friendship.new_record?
-        flash[:error] = "There was a problem creating that friend request."
-      else
-        flash[:success] = "Friend request sent"
-      end
-        redirect_to profile_path(@friend)
+
+      respond_to do |format|
+        if @user_friendship.new_record?
+          format.html do 
+            flash[:error] = "There was problem creating that friend request."
+            redirect_to profile_path(@friend)
+          end
+          format.json { render json: @user_friendship.to_json, status: :precondition_failed }
+        else
+          format.html do
+            flash[:success] = "Friend request sent."
+            redirect_to profile_path(@friend)
+          end
+          format.json { render json: @user_friendship.to_json }
+        end
+      end        
     else
       flash[:error] = "Friend not found"
       redirect_to root_url
@@ -49,8 +57,21 @@ class UserFriendshipsController < ApplicationController
   end
 
   def edit
-    @user_friendship = current_user.user_friendships.find(params[:id])
-    @friend = @user_friendship.friend
+    @friend = User.where(profile_name: params[:id]).first
+    @user_friendship = current_user.user_friendships.where(friend_id: @friend.id).first.decorate
+    # @user_friendship = current_user.user_friendships.find(params[:id]).decorate
+    # @friend = @user_friendship.friend
+    # @user_friendship = current_user.user_friendships.find(params[friend_id: @friend.id]).decorate
+    Rails.logger.info ">>>>>>>>>>>>>>>>>>>"
+    Rails.logger.info "@friend: #{@friend.inspect}"
+    Rails.logger.info ">>>>>>>>>>>>>>>>>>>"
+    # @user_friendship = current_user.user_friendships.where(friend_id: @friend.id).first.decorate
+    # @user_friendship = current_user.user_friendships.find(params[:id]).decorate
+
+    # @user_friendship = current_user.user_friendships.where(friend_id: @friend.id).first.decorate
+    # @friend = @user_friendship.friend
+    # @user_friendship = current_user.user_friendships.find(params[:id])
+    # @friend = @user_friendship.friend
   end
 
   def destroy 

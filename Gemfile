@@ -25,6 +25,8 @@ gem "omniauth-google-oauth2"
 gem 'google-api-client', :require => 'google/api_client'
 gem 'acts-as-taggable-on'
 gem 'state_machine'
+gem 'draper'
+gem 'js-routes'
 group :development, :test do
   gem 'rspec-rails', '~> 3.0.0.beta'
   gem 'faker'
