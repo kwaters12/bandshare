@@ -3,10 +3,11 @@
   - tag_cloud Band.tag_counts, %w[s m l] do |tag, css_class|
     = link_to tag.name, genres_path(tag.name), class: css_class
 - @bands.each do |band|
-  - if can_display_band(band)
-    / = image_tag band.owner.gravatar_url
-    = image_tag band.logo.url(:medium)
+  - if can_display_band(band)    
     %h3= link_to "#{band.name}", band_path(band)
+    - if band.document && band.document.attachment?
+      = band_logo_display(band)
+    %br
     Genres:
     = raw band.tag_list.map { |t| link_to t, genres_path(t) }.join(', ')
     %br
@@ -14,4 +15,4 @@
       = link_to "#{member.name_display}", profile_path(member)
 
     %p= link_to "Edit", edit_band_path(band)
-    %p= link_to "Band Owner: #{band.owner}", profile_path(band.owner)
+    %p= link_to "Band Owner: #{band.user.name_display}", profile_path(band.user)

@@ -61,11 +61,11 @@ kelly  = User.find_by_email('kelly@gigsurfing.com')
 
 seed_user = eddie
 
-seed_user.bands.create(name: "RickRockers", genres: "rap, rock, roll", links: "www.youtube.com, www.soundcloud.com", address: "1000 Main Street", owner: "eddie")
-kelly.bands.create(name: "FunkBasters", genres: "rap, rock, roll", links: "www.youtube.com, www.soundcloud.com", address: "1000 Main Street", owner: "kwatts")
-dave.bands.create(name: "BadNuts", genres: "rap, rock, roll", links: "www.youtube.com, www.soundcloud.com", address: "1000 Main Street", owner: "dave")
-bill.bands.create(name: "Festicatas", genres: "rap, rock, roll", links: "www.youtube.com, www.soundcloud.com", address: "1000 Main Street", owner: "bill")
-louis.bands.create(name: "Louis Hewis and the Olds", genres: "rap, rock, roll", links: "www.youtube.com, www.soundcloud.com", address: "1000 Main Street", owner: "louis")
+seed_user.bands.create(name: "RickRockers", genres: "rap, rock, roll", links: "www.youtube.com, www.soundcloud.com", address: "1000 Main Street")
+kelly.bands.create(name: "FunkBasters", genres: "rap, rock, roll", links: "www.youtube.com, www.soundcloud.com", address: "1000 Main Street")
+dave.bands.create(name: "BadNuts", genres: "rap, rock, roll", links: "www.youtube.com, www.soundcloud.com", address: "1000 Main Street")
+bill.bands.create(name: "Festicatas", genres: "rap, rock, roll", links: "www.youtube.com, www.soundcloud.com", address: "1000 Main Street")
+louis.bands.create(name: "Louis Hewis and the Olds", genres: "rap, rock, roll", links: "www.youtube.com, www.soundcloud.com", address: "1000 Main Street")
 
 UserFriendship.request(seed_user, kelly).accept!
 UserFriendship.request(seed_user, dave).block!

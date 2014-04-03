@@ -6,6 +6,7 @@ class User < ActiveRecord::Base
 
   has_many :memberships, dependent: :destroy
   has_many :bands, through: :memberships
+  has_many :bands
   has_many :user_friendships
   has_many :friends, through: :user_friendships,
                      conditions: { user_friendships: { state: 'accepted' }}

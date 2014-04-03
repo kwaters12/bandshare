@@ -4,7 +4,7 @@ class HomepageController < ApplicationController
     if params[:tag]
       @bands = Band.tagged_with(params[:tag])
     else
-      @bands = Band.all
+      @bands = Band.order('created_at desc').all
     end
   end
 

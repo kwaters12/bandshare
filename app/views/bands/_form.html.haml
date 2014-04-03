@@ -1,4 +1,4 @@
-= form_for @band do |f|  
+= form_for @band, html: { :multipart => true } do |f|  
   .col-md-6
     = f.label :name
     %br
@@ -27,9 +27,15 @@
     .col-md-12
       = f.text_field :address, class: "form-control"
     %br
-    = f.label :logo
-    .col-md-12
-      = f.file_field :logo
+    <strong>Logo</strong>
+    = f.fields_for :document do |document_fields|
+      - if document_fields.object.attachment?
+        .control-group
+          %label.control-label Current attachment
+          .controls
+            = link_to document_fields.object.attachment_file_name, document_fields.object.attachment.url
+      = document_fields.check_box :remove_attachment, as: :boolean, label: "Remove attachment?"
+      = document_fields.file_field :attachment
     %br
     %br
     = f.submit value: 'Add', class: 'btn btn-default'
