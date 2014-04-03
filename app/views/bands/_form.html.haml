@@ -27,5 +27,9 @@
     .col-md-12
       = f.text_field :address, class: "form-control"
     %br
+    = f.label :logo
+    .col-md-12
+      = f.file_field :logo
+    %br
     %br
     = f.submit value: 'Add', class: 'btn btn-default'

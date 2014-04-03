@@ -15,6 +15,7 @@ describe UserFriendship do
     it "doesn't alow new requests once blocked" do
       @user_friendship.block!
       uf = UserFriendship.request users(:jason), users(:mike)
+      assert !uf.save
     end
 
   end

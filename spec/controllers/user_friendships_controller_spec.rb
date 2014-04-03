@@ -4,6 +4,11 @@ describe UserFriendshipsController do
   
   include Devise::TestHelpers
 
+  before (:each) do
+    user = create(:user)
+    sign_in user
+  end
+
   context "#index" do
     context "when not logged in" do
       it "redirect to the login page" do
@@ -17,6 +22,8 @@ describe UserFriendshipsController do
       setup do
         @friendship1 = create(:pending_user_friendship, user: users(:jason), friend: create(:user, first_name: 'Pending', last_name: 'Friend'))
         @friendship2 = create(:accepted_user_friendship, user: users(:jason), friend: create(:user, first_name: 'Active', last_name: 'Friend'))
+        @friendship3 = create(:requested_user_friendship, user: users(:jason), friend: create(:user, first_name: 'Requested', last_name: 'Friend'))
+        @friendship4 = user_friendships(:blocked_by_jason)
 
         sign_in users(:jason)
         get :index
@@ -46,11 +53,88 @@ describe UserFriendshipsController do
           assert_select "em", "Friendship started #{@friendship2.updated_at}."
         end
       end
+
+      describe "blocked users" do
+        setup do
+          get :index, list: 'blocked'
+        end
+
+        it "gets the index without error" do
+          expect(response).to be_success
+        end
+
+        it "doesn't display pending or active friend's names" do
+          assert_no_match /Pending\ Friend/, response.body
+          assert_no_match /Active\ Friend/, response.body
+        end
+
+        it "displays blocked friend names" do
+          assert_match /Blocked\ Friend/, response.body
+        end
+
+      end
+
+      describe "pending friendships" do
+        setup do
+          get :index, list: 'pending'
+        end
+
+        it "get the index without error" do
+          assert_response :success
+        end
+
+        it "not display pending or active friend's names" do
+          assert_no_match /Blocked/, response.body
+          assert_no_match /Active/, response.body
+        end
+
+        it "display blocked friends" do
+          assert_match /Pending/, response.body
+        end
+      end
+
+      describe "requested friendships" do
+        setup do
+          get :index, list: 'requested'
+        end
+
+        it "get the index without error" do
+          assert_response :success
+        end
+
+        it "not display pending or active friend's names" do
+          assert_no_match /Blocked/, response.body
+          assert_no_match /Active/, response.body
+        end
+
+        it "display requested friends" do
+          assert_match /Requested/, response.body
+        end
+      end
+
+      describe "accepted friendships" do
+        setup do
+          get :index, list: 'accepted'
+        end
+
+        it "get the index without error" do
+          assert_response :success
+        end
+
+        it "not display pending or active friend's names" do
+          assert_no_match /Blocked/, response.body
+          assert_no_match /Requested/, response.body
+        end
+
+        it "display requested friends" do
+          assert_match /Active/, response.body
+        end
+      end
     end
   end
 
-  context "#new" do
-    context "when not logged in" do
+  describe "#new" do
+    describe "when not logged in" do
       it "redirect to the login page" do
         get :new
         assert_response :redirect
@@ -58,7 +142,7 @@ describe UserFriendshipsController do
       end
     end
 
-    context "when logged in" do
+    describe "when logged in" do
       setup do
         sign_in users(:jason)
       end
@@ -100,8 +184,8 @@ describe UserFriendshipsController do
     end
   end
   
-  context "#create" do
-    context "when not logged in" do
+  describe "#create" do
+    describe "when not logged in" do
       it "redirect to the login page" do
         get :new
         assert_response :redirect
@@ -109,12 +193,12 @@ describe UserFriendshipsController do
       end
     end
 
-    context "when logged in" do
+    describe "when logged in" do
       setup do
         sign_in users(:jason)
       end
 
-      context "with no friend_id" do
+      describe "with no friend_id" do
         setup do
           post :create
         end
@@ -128,7 +212,7 @@ describe UserFriendshipsController do
         end
       end
 
-      context "with a valid friend_id" do
+      describe "with a valid friend_id" do
         setup do
           post :create, user_friendship: { friend_id: users(:mike).profile_name }
         end
@@ -152,8 +236,8 @@ describe UserFriendshipsController do
     end
   end
 
-  context "#edit" do
-    context "when not logged in" do
+  describe "#edit" do
+    describe "when not logged in" do
       it "redirect to the login page" do
         get :edit, id: 1
         assert_response :redirect
@@ -161,7 +245,7 @@ describe UserFriendshipsController do
       end
     end
 
-    context "when logged in" do
+    describe "when logged in" do
       setup do
         @user_friendship = create(:pending_user_friendship, user: users(:jason))
         sign_in users(:jason)
@@ -181,8 +265,8 @@ describe UserFriendshipsController do
   end
 
 
-  context "#accept" do
-    context "when not logged in" do
+  describe "#accept" do
+    describe "when not logged in" do
       it "redirect to the login page" do
         put :accept, id: 1
         assert_response :redirect
@@ -190,7 +274,7 @@ describe UserFriendshipsController do
       end
     end
 
-    context "when logged in" do
+    describe "when logged in" do
       setup do
         @friend = create(:user)
         @user_friendship = create(:pending_user_friendship, user: users(:jason), friend: @friend)
@@ -211,8 +295,8 @@ describe UserFriendshipsController do
     end
   end
 
-  context "#delete" do
-    context "when not logged in" do
+  describe "#delete" do
+    describe "when not logged in" do
       it "redirect to the login page" do
         delete :destroy, id: 1
         assert_response :redirect
@@ -220,7 +304,7 @@ describe UserFriendshipsController do
       end
     end
 
-    context "when logged in" do
+    describe "when logged in" do
       setup do
         @friend = create(:user)
         @user_friendship = create(:acccepted_user_friendship, friend: @friend, user: users(:jason))
@@ -242,6 +326,33 @@ describe UserFriendshipsController do
         assert_equal "Friendship destroyed", flash[:success]
       end
       
+    end
+  end
+
+  describe "#block" do
+    describe "when not logged in" do
+      it "redirects to the login page" do
+        put :block, id: 1
+        expect(response).to be_redirect
+      end
+    end
+
+    describe "when logged in" do
+      setup do
+        @user_friendship = create(:pending_user_friendship, user: users(:jason))
+        sign_in users(:jason)
+        put :block, id: @user_friendship
+        @user_friendship.reload
+      end
+
+      it "assigns a user friendship" do
+        assert assigns(:user_friendship)
+        assert_equal @user_friendship, assigns(:user_friendship)
+      end
+
+      it "updates the user friendship state to blocked" do
+        assert_equal 'blocked', @user_friendship.state
+      end
     end
   end
 end

@@ -1,4 +1,5 @@
 %h2 Your Band:
+= image_tag @band.logo.url
 %h3= @band.name
 %h4 Band Members:
 - @band.users.each do |user|

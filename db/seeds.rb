@@ -5,3 +5,69 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+DEFAULT_INSECURE_PASSWORD = 'surfinggigs'
+
+User.create({
+  first_name: "Eddie",
+  last_name: "Murphy",
+  profile_name: "eddie",
+  email: "eddie@gigsurfing.com",
+  password: DEFAULT_INSECURE_PASSWORD,
+  password_confirmation: DEFAULT_INSECURE_PASSWORD
+})
+
+User.create({
+  first_name: "Dave",
+  last_name: "Chappelle",
+  profile_name: "dave",
+  email: "dave@gigsurfing.com",
+  password: DEFAULT_INSECURE_PASSWORD,
+  password_confirmation: DEFAULT_INSECURE_PASSWORD
+})
+
+User.create({
+  first_name: "Bill",
+  last_name: "Burr",
+  profile_name: "bill",
+  email: "bill@gigsurfing.com",
+  password: DEFAULT_INSECURE_PASSWORD,
+  password_confirmation: DEFAULT_INSECURE_PASSWORD
+})
+
+User.create({
+  first_name: "Louis",
+  last_name: "C.K.",
+  profile_name: "louis",
+  email: "louis@gigsurfing.com",
+  password: DEFAULT_INSECURE_PASSWORD,
+  password_confirmation: DEFAULT_INSECURE_PASSWORD
+})
+
+User.create({
+  first_name: "Kelly",
+  last_name: "Waters",
+  profile_name: "kwatts",
+  email: "kelly@gigsurfing.com",
+  password: DEFAULT_INSECURE_PASSWORD,
+  password_confirmation: DEFAULT_INSECURE_PASSWORD
+})
+
+eddie = User.find_by_email('eddie@gigsurfing.com')
+dave   = User.find_by_email('dave@gigsurfing.com')
+bill  = User.find_by_email('bill@gigsurfing.com')
+louis  = User.find_by_email('louis@gigsurfing.com')
+kelly  = User.find_by_email('kelly@gigsurfing.com')
+
+seed_user = eddie
+
+seed_user.bands.create(name: "RickRockers", genres: "rap, rock, roll", links: "www.youtube.com, www.soundcloud.com", address: "1000 Main Street", owner: "eddie")
+kelly.bands.create(name: "FunkBasters", genres: "rap, rock, roll", links: "www.youtube.com, www.soundcloud.com", address: "1000 Main Street", owner: "kwatts")
+dave.bands.create(name: "BadNuts", genres: "rap, rock, roll", links: "www.youtube.com, www.soundcloud.com", address: "1000 Main Street", owner: "dave")
+bill.bands.create(name: "Festicatas", genres: "rap, rock, roll", links: "www.youtube.com, www.soundcloud.com", address: "1000 Main Street", owner: "bill")
+louis.bands.create(name: "Louis Hewis and the Olds", genres: "rap, rock, roll", links: "www.youtube.com, www.soundcloud.com", address: "1000 Main Street", owner: "louis")
+
+UserFriendship.request(seed_user, kelly).accept!
+UserFriendship.request(seed_user, dave).block!
+UserFriendship.request(seed_user, bill)
+UserFriendship.request(louis, seed_user)

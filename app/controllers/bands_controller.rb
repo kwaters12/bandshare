@@ -9,7 +9,7 @@ class BandsController < ApplicationController
 
   def create
     @band = current_user.bands.new band_params
-
+    @band.owner = current_user.profile_name
 
     if @band.save 
       redirect_to root_url, notice: "Band added!"
@@ -42,7 +42,7 @@ class BandsController < ApplicationController
   end
 
   def band_params
-    params.require(:band).permit([:name, :tag_list, :links, :address, {user_ids:[]}])
+    params.require(:band).permit([:name, :tag_list, :links, :address, :owner, :logo, {user_ids:[]}])
   end
 
 end
