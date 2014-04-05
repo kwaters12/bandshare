@@ -14,6 +14,14 @@
 
   <div><%= f.label :email %><br />
   <%= f.email_field :email %></div>
+  
+  <div class ="profile-pic">
+    <h2>Profile Picture</h2>
+    <%= f.file_field :avatar %>
+    <% if f.object.avatar? %>
+    <%= image_tag f.object.avatar.url %>
+    <% end %>
+  </div>
 
   <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
     <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>

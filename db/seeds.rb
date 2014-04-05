@@ -6,7 +6,7 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-DEFAULT_INSECURE_PASSWORD = 'surfinggigs'
+DEFAULT_INSECURE_PASSWORD = '11111111'
 
 User.create({
   first_name: "Eddie",

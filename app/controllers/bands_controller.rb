@@ -31,7 +31,7 @@ class BandsController < ApplicationController
   def update
     @document = @band.document
     respond_to do |format|
-      if @band.update_attributes(band_params) && @document && @document.update_attributes(params[:document_attributes])
+      if @band.update_attributes(band_params) && @document 
         format.html {redirect_to @band, notice: "Band was updated successfully."}
         format.json { head :no_content }
       else
