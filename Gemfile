@@ -27,6 +27,8 @@ gem 'acts-as-taggable-on'
 gem 'state_machine'
 gem 'draper'
 gem 'js-routes'
+gem 'simple_form'
+
 group :development, :test do
   gem 'rspec-rails', '~> 3.0.0.beta'
   gem 'faker'

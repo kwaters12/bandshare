@@ -2,8 +2,11 @@ require 'spec_helper'
 
 describe UserFriendship do
   describe '#block!' do
-    setup do
-      @user_friendship = UserFriendship.request users(:jason), users(:mike)
+
+    before (:each) do
+      user = create(:user)
+      user2 = create(:user)
+      @user_friendship = UserFriendship.request(user, user2)
     end
 
     it "sets the state to blocked" do
@@ -14,7 +17,10 @@ describe UserFriendship do
 
     it "doesn't alow new requests once blocked" do
       @user_friendship.block!
-      uf = UserFriendship.request users(:jason), users(:mike)
+      user = create(:user)
+      user2 = create(:user)
+      uf = UserFriendship.request(user, user2)
+      # expect(uf).not_to save
       assert !uf.save
     end
 

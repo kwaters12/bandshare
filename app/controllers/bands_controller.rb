@@ -13,7 +13,7 @@ class BandsController < ApplicationController
 
   def create
     @band = current_user.bands.new band_params
-    @band.build_documen
+    @band.build_document
     if @band.save 
       redirect_to root_url, notice: "Band added!"
     else

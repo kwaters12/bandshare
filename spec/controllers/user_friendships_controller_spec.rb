@@ -5,8 +5,11 @@ describe UserFriendshipsController do
   include Devise::TestHelpers
 
   before (:each) do
-    user = create(:user)
-    sign_in user
+    @user = create(:user)
+    @user2 = create(:user)
+    sign_in @user
+    sign_in @user2
+
   end
 
   context "#index" do
@@ -163,8 +166,8 @@ describe UserFriendshipsController do
       end
 
       it "display the friend's name" do
-        get :new, friend_id: users(:jim).profile_name
-        assert_match /#{users(:jim).full_name}/, response.body
+        get :new, friend_id: @user.profile_name
+        assert_match /#{@user.name_display}/, response.body
       end
 
       it "assign a user friendship" do
@@ -173,8 +176,8 @@ describe UserFriendshipsController do
       end
 
       it "assign a user friendship with the user as current user" do
-        get :new, friend_id: users(:jim).profile_name
-        assert_equal assigns(:user_friendship).user, users(:jason)
+        get :new, friend_id: @user.profile_name
+        assert_equal assigns(:user_friendship).user, @user2
       end
 
       it "assign a user friendship with the correct friend" do
@@ -239,7 +242,7 @@ describe UserFriendshipsController do
   describe "#edit" do
     describe "when not logged in" do
       it "redirect to the login page" do
-        get :edit, id: 1
+        get :edit
         assert_response :redirect
         assert_redirected_to login_path
       end
@@ -247,7 +250,7 @@ describe UserFriendshipsController do
 
     describe "when logged in" do
       setup do
-        @user_friendship = create(:pending_user_friendship, user: users(:jason))
+        @user_friendship = create(:pending_user_friendship, user: @user1)
         sign_in users(:jason)
         get :edit, id: @user_friendship
       end
@@ -298,7 +301,10 @@ describe UserFriendshipsController do
   describe "#delete" do
     describe "when not logged in" do
       it "redirect to the login page" do
-        delete :destroy, id: 1
+        @friendship1 = create(:accepted_user_friendship, user: @user, friend: @user2)
+        @friendship1.user_id = @user.id
+        @friendship1.save
+        delete :destroy, id: @friendship1.id
         assert_response :redirect
         assert_redirected_to login_path
       end

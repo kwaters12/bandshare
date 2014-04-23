@@ -24,8 +24,18 @@ class User < ActiveRecord::Base
                                       conditions: { state: 'blocked' }
   has_many :blocked_friends, through: :pending_user_friendships, source: :friend
 
-  has_attached_file :avatar, :styles => { :medium => "300x300>", :thumb => "100x100>" }, :default_url => "/images/:style/missing.png"
+  has_attached_file :avatar, :styles => { :medium => "300x300>", :thumb => "100x100>", :large => "600x600>" }, :default_url => "/images/:style/missing.png"
   validates_attachment_content_type :avatar, :content_type => /\Aimage\/.*\Z/
+
+  def self.get_gravatars
+    all.each do |user|
+      if !user.avatar?
+        user.avatar = URI.parse(user.gravatar_url)
+        user.save
+        print "."
+      end
+    end
+  end
 
   def name_display
     if first_name || last_name

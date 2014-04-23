@@ -13,7 +13,8 @@
   - friend = friendship.friend
   .friend.row{:id => dom_id(friendship)}
   .col-md-1
-    = link_to image_tag(friend.gravatar_url), profile_path(friend)
+    = avatar_profile_link friendship.friend, {}, class: 'pull-left' 
+    / = link_to image_tag(friend.gravatar_url), profile_path(friend)
 
   .col-md-7
     <strong>#{friend.name_display}</strong>
