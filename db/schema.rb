@@ -11,10 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140403230907) do
+ActiveRecord::Schema.define(version: 20140423212354) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "albums", force: true do |t|
+    t.integer  "user_id"
+    t.string   "title"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "albums", ["user_id"], name: "index_albums_on_user_id", using: :btree
 
   create_table "bands", force: true do |t|
     t.string   "name"
@@ -50,6 +59,22 @@ ActiveRecord::Schema.define(version: 20140403230907) do
 
   add_index "memberships", ["band_id"], name: "index_memberships_on_band_id", using: :btree
   add_index "memberships", ["user_id"], name: "index_memberships_on_user_id", using: :btree
+
+  create_table "pictures", force: true do |t|
+    t.integer  "album_id"
+    t.integer  "user_id"
+    t.string   "caption"
+    t.text     "description"
+    t.string   "asset_file_name"
+    t.string   "asset_content_type"
+    t.integer  "asset_file_size"
+    t.datetime "asset_updated_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "pictures", ["album_id"], name: "index_pictures_on_album_id", using: :btree
+  add_index "pictures", ["user_id"], name: "index_pictures_on_user_id", using: :btree
 
   create_table "taggings", force: true do |t|
     t.integer  "tag_id"

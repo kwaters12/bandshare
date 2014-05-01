@@ -1,0 +1,9 @@
+%h1 Viewing Picture
+
+= image_tag(@picture.asset.url(:large))
+%br
+%h3= @picture.caption
+%p= @picture.description
+
+= link_to "Edit", edit_album_picture_path(@album, @picture)
+= link_to "Album", album_pictures_path(@album)

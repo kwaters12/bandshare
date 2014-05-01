@@ -1,7 +1,10 @@
 .page-header
+  = avatar_profile_link @user, {}, class: ''
   %h1= @user.name_display
 
-- if signed_in? && (current_user != @user)
+= link_to "Albums", albums_path(@user), class: 'btn btn-default'
+
+- if signed_in? 
   #friend-status
     - if current_user.friends.include?(@user) || current_user.pending_friends.include?(@user) 
       = link_to "Edit Friendship", edit_user_friendship_path(friend_id: @user.id), class: 'btn' 

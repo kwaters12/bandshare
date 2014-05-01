@@ -6,8 +6,9 @@ class User < ActiveRecord::Base
 
   has_many :memberships, dependent: :destroy
   has_many :bands, through: :memberships
-  has_many :bands
   has_many :user_friendships
+  has_many :albums
+  has_many :pictures
   has_many :friends, through: :user_friendships,
                      conditions: { user_friendships: { state: 'accepted' }}
 
@@ -47,6 +48,10 @@ class User < ActiveRecord::Base
 
   def to_param
     profile_name
+  end
+
+  def to_s
+    first_name
   end
   
   def gravatar_url

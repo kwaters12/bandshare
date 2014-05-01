@@ -1,0 +1,17 @@
+- if signed_in? && current_user === @user
+  = link_to "Add Picture", new_album_picture_path(current_user, @album), class: "btn btn-default"
+%h1=@album.title
+%ul.thumbnails
+  - @pictures.each do |picture|
+    .col-md-3
+      %li.thumbnail
+        =link_to image_tag(picture.asset.url(:thumb)), album_picture_path(@user, @album, picture)
+        %br
+        .caption
+          - if picture.caption?
+            = picture.caption
+        %br
+        = link_to "View Full Size", album_picture_path(@user, @album, picture)
+        - if can_edit_picture?(picture)
+          = link_to "Edit", edit_album_picture_path(@album, picture)
+          = link_to "Delete", album_picture_path(@album, picture), method: :delete, data: { confirm: "Are you sure?"}
