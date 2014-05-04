@@ -9,5 +9,7 @@ class Band < ActiveRecord::Base
   accepts_nested_attributes_for :document
 
   acts_as_taggable
+  acts_as_taggable_on :genres
+
 
 end

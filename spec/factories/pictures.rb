@@ -2,8 +2,8 @@
 
 FactoryGirl.define do
   factory :picture do
-    album nil
-    user nil
+    association :album,    :factory => :album
+    association :user,     :factory => :user
     caption "MyString"
     description "MyText"
     asset ""

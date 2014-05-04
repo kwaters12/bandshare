@@ -16,17 +16,17 @@ describe ProfilesController do
     end
 
     it "renders a 404 on no profile found" do
-      get :show
-      assert_response :not_found
+      get :show, id: "none"
+      expect(response.status).to eq(404)
     end 
 
-    it "shows statuses on success" do
+    it "shows bands on success" do
       get :show, id: @user.profile_name
       band = @user.bands.new(name: "Banditos")
-      assert_not_empty assigns(:bands)
+      expect(@user.bands).not_to be_empty
     end
 
-    it "only shows the correct user's statuses" do
+    it "only shows the correct user's bands" do
       get :show, id: @user.profile_name
       assigns(:bands).each do |band|
         assert_equal @user, band.user

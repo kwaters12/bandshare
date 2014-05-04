@@ -30,14 +30,26 @@ class BandsController < ApplicationController
 
   def update
     @document = @band.document
+
+    @band.transaction do
+      @band.update_attributes(band_params)
+      @document.update_attributes(document_params) if @document
+      raise ActiveRecord::Rollback unless @band.valid? && @document.try(:valid?)
+    end
+    
+      # if @band.update_attributes(band_params) && @document 
+    respond_to do |format|    
+      format.html {redirect_to @band, notice: "Band was updated successfully."}
+      format.json { head :no_content }
+    end
+
+  rescue ActiveRecord::Rollback
     respond_to do |format|
-      if @band.update_attributes(band_params) && @document 
-        format.html {redirect_to @band, notice: "Band was updated successfully."}
-        format.json { head :no_content }
-      else
-        format.html { render :edit }
-        format.json { render json: @band.errors, status: :unprocessable_entity }
+      format.html do
+        flash.now[:error] = "Update failed."
+        render :edit 
       end
+      format.json { render json: @band.errors, status: :unprocessable_entity }
     end
   end
 
@@ -45,6 +57,10 @@ class BandsController < ApplicationController
 
   def find_band
     @band = Band.find(params[:id])
+  end
+
+  def document_params
+    params.permit([:attachment, :remove_attachment])
   end
 
   def band_params

@@ -4,6 +4,11 @@ describe HomepageController do
   
   include Devise::TestHelpers
 
+  before (:each) do
+    user = create(:user)
+    sign_in user
+  end
+
   describe "#index" do
     it "is successful" do
       get :index
@@ -14,5 +19,6 @@ describe HomepageController do
       
     end
   end
+
 
 end

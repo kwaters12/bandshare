@@ -1,8 +1,6 @@
-# Read about factories at https://github.com/thoughtbot/factory_girl
-
 FactoryGirl.define do
   factory :album do
-    user nil
-    title "MyString"
+    association :user,     :factory => :user    
+    title Faker::Company.catch_phrase
   end
 end

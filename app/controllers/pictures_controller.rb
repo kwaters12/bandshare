@@ -3,6 +3,7 @@ class PicturesController < ApplicationController
   before_action :find_user
   before_action :find_album
   before_action :find_picture, only: [:edit, :update, :show, :destroy]
+  # before_action :ensure_proper_user, only: [:edit, :new, :create, :update, :destroy]
   before_action :add_breadcrumbs
 
   def index
@@ -24,7 +25,7 @@ class PicturesController < ApplicationController
   end 
 
   def new
-    @picture = Picture.new
+    @picture = @album.pictures.new
     respond_to  do |format|
       format.html
       format.json { render json: @picture}
@@ -75,6 +76,13 @@ class PicturesController < ApplicationController
   end
 
   private
+
+  # def ensure_proper_user
+  #   if current_user.profile_name != @user
+  #     flash[:error] = "You don't have permission to do that"
+  #     redirect to album_pictures_path
+  #   end
+  # end
 
   def add_breadcrumbs
     add_breadcrumb @user.first_name, profile_path(@user)

@@ -2,6 +2,7 @@ class AlbumsController < ApplicationController
   before_action :authenticate_user!, only: [:create, :new, :update, :edit, :destroy]
   before_action :find_user
   before_action :find_album, only: [:edit, :update, :destroy]
+  # before_action :ensure_proper_user, only: [:edit, :create, :update, :destroy]
   before_action :add_breadcrumbs
 
   def index
@@ -41,7 +42,7 @@ class AlbumsController < ApplicationController
 
   def update 
     respond_to do |format|
-      if @album.update_attributes
+      if @album.update_attributes album_params
         format.html { redirect_to album_pictures_path(@album), notice: "Album was successfully updated."}
         format.json { head :no_content}
       else
@@ -67,6 +68,13 @@ class AlbumsController < ApplicationController
 
   private
 
+  # def ensure_proper_user
+  #   if current_user.profile_name != @user
+  #     flash[:error] = "You don't have permission to do that"
+  #     redirect to albums_path
+  #   end
+  # end
+
   def add_breadcrumbs
     add_breadcrumb @user, profile_path(@user)
     add_breadcrumb 'Albums', albums_path
@@ -77,11 +85,11 @@ class AlbumsController < ApplicationController
   end
 
   def find_album
-    # if signed_in? && current_user.profile_name == params[:profile_name]
+    if signed_in? && current_user.profile_name == params[:profile_name]
       @album = current_user.albums.find(params[:id])
-    # else
-    #   @album = @user.albums.find(params[:album_id])
-    # end
+    else
+      @album = @user.albums.find(params[:album_id])
+    end
   end
 
   def album_params

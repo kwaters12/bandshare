@@ -9,12 +9,13 @@ describe UserFriendshipsController do
     @user2 = create(:user)
     sign_in @user
     sign_in @user2
-
   end
 
-  context "#index" do
+  describe "#index" do
     context "when not logged in" do
       it "redirect to the login page" do
+        sign_out @user
+        sign_out @user2
         get :new
         assert_response :redirect
         assert_redirected_to login_path
@@ -22,27 +23,17 @@ describe UserFriendshipsController do
     end
 
     context "when logged in" do
-      setup do
-        @friendship1 = create(:pending_user_friendship, user: users(:jason), friend: create(:user, first_name: 'Pending', last_name: 'Friend'))
-        @friendship2 = create(:accepted_user_friendship, user: users(:jason), friend: create(:user, first_name: 'Active', last_name: 'Friend'))
-        @friendship3 = create(:requested_user_friendship, user: users(:jason), friend: create(:user, first_name: 'Requested', last_name: 'Friend'))
-        @friendship4 = user_friendships(:blocked_by_jason)
+      before (:each) do
+        @friendship1 = create(:pending_user_friendship, user: @user, friend: @user2)
+        @friendship2 = create(:accepted_user_friendship, user: @user, friend: @user2)
+        @friendship3 = create(:requested_user_friendship, user: @user, friend: @user2)
+        # @friendship4 = user_friendships(:blocked_by_jason)
 
-        sign_in users(:jason)
         get :index
       end
 
       it "get index without error" do
-        assert_response :success
-      end
-
-      it "assign user_friendships" do
-        assert assigns(:user_friendships)
-      end
-
-      it "display friend's names" do
-        assert_match /Pending/, response.body
-        assert_match /Active/, response.body
+        expect(response).to be_success
       end
 
       it "display pending information on a pending friendship" do
@@ -189,10 +180,9 @@ describe UserFriendshipsController do
   
   describe "#create" do
     describe "when not logged in" do
-      it "redirect to the login page" do
+      it "redirects to the login page" do
         get :new
-        assert_response :redirect
-        assert_redirected_to login_path
+        expect(response).to redirect_to(login_path)
       end
     end
 
@@ -344,7 +334,7 @@ describe UserFriendshipsController do
     end
 
     describe "when logged in" do
-      setup do
+      before (:each) do
         @user_friendship = create(:pending_user_friendship, user: users(:jason))
         sign_in users(:jason)
         put :block, id: @user_friendship
