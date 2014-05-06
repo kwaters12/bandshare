@@ -30,6 +30,7 @@ class AlbumsController < ApplicationController
   def create
     @album = current_user.albums.new album_params
     if @album.save 
+      current_user.create_activity(@album, 'created')
       redirect_to albums_url, notice: "Album added!"
     else
       render :new
@@ -43,6 +44,7 @@ class AlbumsController < ApplicationController
   def update 
     respond_to do |format|
       if @album.update_attributes album_params
+        current_user.create_activity(@album, 'updated')
         format.html { redirect_to album_pictures_path(@album), notice: "Album was successfully updated."}
         format.json { head :no_content}
       else

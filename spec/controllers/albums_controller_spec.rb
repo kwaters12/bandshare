@@ -39,6 +39,12 @@ describe AlbumsController do
       post :create, profile_name: user.profile_name, album: { user: user, title: 'bacon and eggs?'}
       expect(response).to redirect_to(albums_path)
     end
+
+    it "should create an activity item for the creation of the album" do
+      expect do
+        post :create, profile_name: user.profile_name, album: { user: user, title: 'bacon and eggs?'}
+      end.to change {Activity.count}.by(1)
+    end
   end
 
   describe "#show" do
@@ -59,6 +65,12 @@ describe AlbumsController do
     it "updates the album info" do
       put :update, profile_name: user.profile_name, id: album, album: { title: album.title }
       expect(response).to redirect_to(album_pictures_path(user.profile_name, album.id))
+    end
+
+    it "should create an activity item when the album info is updated" do
+      expect do
+        put :update, profile_name: user.profile_name, id: album, album: { title: album.title }
+      end.to change {Activity.count}.by(1)
     end
   end
 

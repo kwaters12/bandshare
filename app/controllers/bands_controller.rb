@@ -2,6 +2,10 @@ class BandsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
   before_action :find_band, except: [:index, :new, :create]
   
+  def index
+    @bands = Band.all
+  end
+
   def new
     @band = current_user.bands.new
     @band.build_document
@@ -15,6 +19,7 @@ class BandsController < ApplicationController
     @band = current_user.bands.new band_params
     @band.build_document
     if @band.save 
+      current_user.create_activity(@band, 'created')
       redirect_to root_url, notice: "Band added!"
     else
       render :new
@@ -34,7 +39,10 @@ class BandsController < ApplicationController
     @band.transaction do
       @band.update_attributes(band_params)
       @document.update_attributes(document_params) if @document
-      raise ActiveRecord::Rollback unless @band.valid? && @document.try(:valid?)
+      current_user.create_activity(@band, 'updated')
+      unless @band.valid? || (@band.valid? && @document && !@document.valid?)      
+        raise ActiveRecord::Rollback 
+      end
     end
     
       # if @band.update_attributes(band_params) && @document 
@@ -43,13 +51,22 @@ class BandsController < ApplicationController
       format.json { head :no_content }
     end
 
-  rescue ActiveRecord::Rollback
-    respond_to do |format|
-      format.html do
-        flash.now[:error] = "Update failed."
-        render :edit 
+    rescue ActiveRecord::Rollback
+      respond_to do |format|
+        format.html do
+          flash.now[:error] = "Update failed."
+          render :edit 
+        end
+        format.json { render json: @band.errors, status: :unprocessable_entity }
       end
-      format.json { render json: @band.errors, status: :unprocessable_entity }
+  end
+
+  def destroy 
+    @band.destroy
+
+    respond_to do |format|
+      format.html { redirect_to bands_url }
+      format.json { head :no_content }
     end
   end
 
