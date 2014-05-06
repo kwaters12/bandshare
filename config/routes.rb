@@ -1,4 +1,5 @@
 Gigsurfing::Application.routes.draw do
+  resources :activities, only: [:index]
 
   get 'tags/:tag', to: 'homepage#index', as: :genres
   resources :bands

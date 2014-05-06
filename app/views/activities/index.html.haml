@@ -1,0 +1,12 @@
+%h1 Activity Feed
+- @activities.each do |activity|
+  .media
+    = avatar_profile_link activity.user, {}, class: 'pull-left'
+    = link_to image_tag(activity.user.gravatar_url), profile_path(activity.user)
+    .media-body
+      %h4.media-heading 
+        = activity.user.name_display
+      %small= activity.created_at
+      / = render partial: "activities/#{activity.targetable_type.underscore}/#{activity.action}", locals: { activity: activity }                                                          
+      %br
+  %hr

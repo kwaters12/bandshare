@@ -7,6 +7,7 @@
   = link_to 'Requested', user_friendships_path(list: 'requested')
   = link_to 'Accepted', user_friendships_path(list: 'accepted')
   = link_to 'Pending', user_friendships_path(list: 'pending')
+  
 .col-md-7    
   - @user_friendships.each do |friendship|
     - friend = friendship.friend
