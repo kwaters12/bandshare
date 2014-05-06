@@ -10,7 +10,6 @@ gem 'pg'
 
 gem 'haml', '~> 4.0.5'
 gem 'bootstrap-sass'
-gem 'factory_girl_rails', '~> 4.3.0'
 gem 'devise'
 gem 'letter_opener'
 gem 'will_paginate'
@@ -37,6 +36,7 @@ group :development, :test do
   gem 'capybara', '~> 2.2.0'
   gem 'selenium-webdriver'
   gem 'pry-rails'
+  gem 'factory_girl_rails', '~> 4.3.0'
   # gem 'capybara-webkit'
 end
 
