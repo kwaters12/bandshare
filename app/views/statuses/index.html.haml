@@ -1,0 +1,6 @@
+%h1 All Statuses:
+- @statuses.each do |status|
+  = status.content
+  - if status.document && status.document.attachment?
+    = status_document_link status
+    %hr

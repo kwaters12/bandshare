@@ -7,23 +7,25 @@ class User < ActiveRecord::Base
   has_many :activities
   has_many :memberships, dependent: :destroy
   has_many :bands, through: :memberships
+  has_many :statuses
   has_many :user_friendships
   has_many :albums
   has_many :pictures
   has_many :friends, through: :user_friendships,
-                     conditions: { user_friendships: { state: 'accepted' }}
+                    # -> { where (user_friendships.map(&:state): 'accepted') }} 
+                    conditions: { user_friendships: { state: 'accepted' }}
 
-  has_many :pending_user_friendships, class_name: 'UserFriendship',
-                                      foreign_key: :user_id,
-                                      conditions: { state: 'pending' }
+  has_many :pending_user_friendships, -> { where state: 'pending' },
+                                      class_name: 'UserFriendship',
+                                      foreign_key: :user_id
   has_many :pending_friends, through: :pending_user_friendships, source: :friend
-  has_many :requested_user_friendships, class_name: 'UserFriendship',
-                                      foreign_key: :user_id,
-                                      conditions: { state: 'requested' }
+  has_many :requested_user_friendships, -> { where state: 'requested' },
+                                      class_name: 'UserFriendship',
+                                      foreign_key: :user_id
   has_many :requested_friends, through: :pending_user_friendships, source: :friend
-  has_many :blocked_user_friendships, class_name: 'UserFriendship',
-                                      foreign_key: :user_id,
-                                      conditions: { state: 'blocked' }
+  has_many :blocked_user_friendships, -> { where state: 'blocked' },
+                                      class_name: 'UserFriendship',
+                                      foreign_key: :user_id
   has_many :blocked_friends, through: :pending_user_friendships, source: :friend
 
   has_attached_file :avatar, :styles => { :medium => "300x300>", :thumb => "100x100>", :large => "600x600>" }, :default_url => "/images/:style/missing.png"
@@ -38,6 +40,10 @@ class User < ActiveRecord::Base
       end
     end
   end
+
+  # def friends
+  #   friends = friends.where(state: 'accepted')
+  # end
 
   def name_display
     if first_name || last_name

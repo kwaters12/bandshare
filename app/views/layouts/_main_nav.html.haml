@@ -1,11 +1,14 @@
 %nav.navbar.navbar-default.navbar-inverse.navbar-top
   %ul.nav.navbar-nav
     %li.active
-      = link_to 'Gigsurfing', root_url
+      -if user_signed_in?
+        = link_to 'BandShare', activities_url
+      -else
+        = link_to 'BandShare', root_url
     %li
       = link_to 'All Bands', bands_path
     %li
-      %a{href: "#"} Messages
+      = link_to 'All Statuses', statuses_path
   #name
     %p
       - if user_signed_in? 

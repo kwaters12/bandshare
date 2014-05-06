@@ -1,0 +1,5 @@
+-if activity.targetable
+  = link_to "#{activity.targetable.title}", album_path(activity.user.profile_name, activity.targetable_id)
+  %br
+  %small 
+    = activity.targetable.created_at

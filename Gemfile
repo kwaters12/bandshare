@@ -29,6 +29,7 @@ gem 'draper'
 gem 'js-routes'
 gem 'simple_form'
 gem 'twitter-bootstrap-rails'
+gem 'rails_12factor'
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.0.0.beta'

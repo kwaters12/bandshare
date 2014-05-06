@@ -23,8 +23,19 @@ module ApplicationHelper
     end
   end
 
+  def status_document_link(status)
+    if status.document && status.document.attachment?
+      content_tag(:span, "Logo", class: "label label-info") +
+      image_tag(status.document.attachment.url(:large))
+    end
+  end
+
   def can_display_band(band)
     signed_in? && !current_user.has_blocked?(band.user) || !signed_in?
+  end
+
+  def can_display_status(status)
+    signed_in? && !current_user.has_blocked?(status.user) || !signed_in?
   end
 
   def page_header(&block)
