@@ -10,8 +10,58 @@
 // Read Sprockets README (https://github.com/sstephenson/sprockets#sprockets-directives) for details
 // about supported directives.
 //
+
 //= require jquery
+//= require bootstrap
 //= require jquery_ujs
 //= require turbolinks
 //= require js-routes
 //= require_tree .
+
+window.loadedActivities = [];
+
+
+var addActivity = function(item) {
+  var found = false;
+  for (var i = 0; i < window.loadedActivities.length; i++) {
+    if (window.loadedActivities[i].id == item.id) {
+      var found = true;
+    }
+  }
+
+  if (!found) {
+    window.loadedActivities.push(item);
+  }
+
+  return item;
+}
+
+var renderActivities = function() {
+  var source = $('#activities-template').html();
+  var template = Handlebars.compile(source);
+  var html = template({activities: window.loadedActivities});
+  var $activityFeedLink = $('li#activity-feed');
+
+  $activityFeedLink.addClass('dropdown');
+  $activityFeedLink.html(html);
+  $activityFeedLink.find('a.dropdown-toggle').dropdown();
+}
+
+var pollActivity = function() {
+  $.ajax({
+    url: Routes.activities_path({format: 'json', since: window.lastFetch}),
+    type: "GET",
+    dataType: "json",
+    success: function(data) {
+      window.lastFetch = Math.floor((new Date).getTime() / 1000);
+      if (data.length > 0){
+        for (var i = 0; i < data.length; i++) {
+          addActivity(data[i]);
+        }
+        renderActivities();
+      }      
+    }
+  })
+}
+pollActivity();
+// window.pollInterval = window.setInterval( pollActivity, 5000 );
