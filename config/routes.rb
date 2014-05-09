@@ -4,6 +4,7 @@ Gigsurfing::Application.routes.draw do
   get 'tags/:tag', to: 'homepage#index', as: :genres
   resources :bands
   resources :statuses
+  resources :instruments
 
   resources :user_friendships do
     member do

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140506030246) do
+ActiveRecord::Schema.define(version: 20140508231325) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -50,6 +50,12 @@ ActiveRecord::Schema.define(version: 20140506030246) do
 
   add_index "bands", ["user_id"], name: "index_bands_on_user_id", using: :btree
 
+  create_table "categories", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "documents", force: true do |t|
     t.integer  "user_id"
     t.datetime "created_at"
@@ -61,6 +67,24 @@ ActiveRecord::Schema.define(version: 20140506030246) do
   end
 
   add_index "documents", ["user_id"], name: "index_documents_on_user_id", using: :btree
+
+  create_table "instruments", force: true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.boolean  "available"
+    t.float    "price"
+    t.integer  "user_id"
+    t.integer  "document_id"
+    t.integer  "category_id"
+    t.integer  "subcategory_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "instruments", ["category_id"], name: "index_instruments_on_category_id", using: :btree
+  add_index "instruments", ["document_id"], name: "index_instruments_on_document_id", using: :btree
+  add_index "instruments", ["subcategory_id"], name: "index_instruments_on_subcategory_id", using: :btree
+  add_index "instruments", ["user_id"], name: "index_instruments_on_user_id", using: :btree
 
   create_table "memberships", force: true do |t|
     t.integer  "user_id"
@@ -98,6 +122,15 @@ ActiveRecord::Schema.define(version: 20140506030246) do
 
   add_index "statuses", ["document_id"], name: "index_statuses_on_document_id", using: :btree
   add_index "statuses", ["user_id"], name: "index_statuses_on_user_id", using: :btree
+
+  create_table "subcategories", force: true do |t|
+    t.string   "name"
+    t.integer  "category_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "subcategories", ["category_id"], name: "index_subcategories_on_category_id", using: :btree
 
   create_table "taggings", force: true do |t|
     t.integer  "tag_id"

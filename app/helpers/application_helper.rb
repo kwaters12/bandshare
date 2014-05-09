@@ -23,6 +23,13 @@ module ApplicationHelper
     end
   end
 
+  def gear_image_display(instrument)
+    if instrument.document && instrument.document.attachment?
+      content_tag(:span, "Logo", class: "label label-info") +
+      image_tag(instrument.document.attachment.url(:large))
+    end
+  end
+
   def status_document_link(status)
     if status.document && status.document.attachment?
       content_tag(:span, "Logo", class: "label label-info") +

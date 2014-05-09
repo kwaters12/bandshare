@@ -1,0 +1,6 @@
+%h3= @instrument.name
+
+- if @instrument.document && @instrument.document.attachment?
+  = gear_image_display(@instrument)
+
+

@@ -1,0 +1,7 @@
+%h1 Your Gear
+- @instruments.each do |instrument|
+  = instrument.name
+  = instrument.description
+  - if instrument.document && instrument.document.attachment?
+    = gear_image_display(instrument)  
+  = link_to "Edit", edit_instrument_path(instrument)

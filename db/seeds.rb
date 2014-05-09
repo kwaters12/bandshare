@@ -71,3 +71,22 @@ UserFriendship.request(seed_user, kelly).accept!
 UserFriendship.request(seed_user, dave).block!
 UserFriendship.request(seed_user, bill)
 UserFriendship.request(louis, seed_user)
+
+require 'csv'
+
+puts "Importing categories..."
+CSV.foreach(Rails.root.join("categories.csv"), headers: true) do |row|
+  Category.create! do |category|
+    category.id = row[0]
+    category.name = row[1]
+  end
+end
+
+puts "Importing subcategories..."
+CSV.foreach(Rails.root.join("subcategories.csv"), headers: true) do |row|
+  Subcategory.create! do |subcategory|
+    subcategory.name = row[0]
+    subcategory.category_id = row[2]
+  end
+end
+

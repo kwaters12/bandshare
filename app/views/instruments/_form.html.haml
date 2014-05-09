@@ -1,0 +1,32 @@
+
+= form_for @instrument, html: { :multipart => true } do |f|  
+  .col-md-6
+    Name:
+    %br
+    .col-md-12
+      = f.text_field :name, class: "form-control"
+    Description:
+    %br
+    .col-md-12
+      = f.text_area :description, class: "form-control"
+    %br
+    .col-md-12
+      = f.label :category_id
+      = f.collection_select :category_id, Category.order(:name), :id, :name, include_blank: true
+    %br
+    .col-md-12
+      = f.label :subcategory_id
+      = f.grouped_collection_select :subcategory_id, Category.order(:name), :subcategories, :name, :id, :name, include_blank: true
+    %br
+    <strong>Picture</strong>
+    = f.fields_for :document do |document_fields|
+      - if document_fields.object.attachment?
+        .control-group
+          %label.control-label Current attachment
+          .controls
+            = link_to document_fields.object.attachment_file_name, document_fields.object.attachment.url
+      = document_fields.check_box :remove_attachment, as: :boolean, label: "Remove attachment?"
+      = document_fields.file_field :attachment
+    %br
+    %br
+    = f.submit value: 'Add', class: 'btn btn-default'
