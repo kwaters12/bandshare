@@ -1,0 +1,11 @@
+%body#homepage
+  .travel
+    %h3 See the world with your bandmates
+  .middle
+    %h3 or
+  .help
+    %h3 Support great world musicians
+  .call-button
+    = link_to "Sign Up!", new_user_registration_path, class: 'btn btn-custom'
+    %br 
+    = link_to "Login!", new_user_session_path, class: 'btn btn-custom'

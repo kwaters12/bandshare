@@ -1,10 +1,10 @@
-%nav.navbar.navbar-default.navbar-inverse.navbar-top
+%nav.navbar.navbar-default.navbar-top
   %ul.nav.navbar-nav
     %li
       -if user_signed_in?
-        = link_to 'BandShare', root_url
+        = link_to 'GigSurfing', root_url
       -else
-        = link_to 'BandShare', root_url
+        = link_to 'GigSurfing', root_url
     %li
       = link_to 'All Bands', bands_path
     %li#activity-feed
@@ -18,7 +18,7 @@
         = link_to "Friends", user_friendships_path        
         = link_to "Feed", activities_path
 
-        = link_to image_tag(current_user.gravatar_url), profile_path(current_user)
+       
         = link_to current_user.name_display, edit_user_registration_path 
         |
         = link_to "Sign Out", destroy_user_session_path, method: :delete     
