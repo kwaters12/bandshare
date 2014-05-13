@@ -30,6 +30,7 @@ gem 'simple_form'
 gem 'twitter-bootstrap-rails'
 gem 'rails_12factor'
 gem 'jquery-turbolinks'
+gem 'mailboxer'
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.0.0.beta'
